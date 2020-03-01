@@ -6,11 +6,11 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>onemono的博客</title>
+  <title>Tag: 技术 | onemono的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta property="og:type" content="website">
 <meta property="og:title" content="onemono的博客">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta property="og:url" content="http://yoursite.com/tags/%E6%8A%80%E6%9C%AF/index.html">
 <meta property="og:site_name" content="onemono的博客">
 <meta property="og:locale" content="en_US">
 <meta property="article:author" content="onemono">
@@ -164,164 +164,34 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-SQLAlchemy中的Session与Query" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
+  
     
-      <header class="article-header">
-        
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2019" class="archive-year">2019</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      	<div class="article-meta">
+	      	<a href="/2019/11/07/SQLAlchemy%E4%B8%AD%E7%9A%84Session%E4%B8%8EQuery/" class="archive-article-date">
+  	<time datetime="2019-11-07T07:17:31.999Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-07</time>
+</a>
+        </div>
+    	 
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/07/SQLAlchemy%E4%B8%AD%E7%9A%84Session%E4%B8%8EQuery/">SQLAlchemy中的Session与Query</a>
+      <a class="archive-article-title" href="/2019/11/07/SQLAlchemy%E4%B8%AD%E7%9A%84Session%E4%B8%8EQuery/">SQLAlchemy中的Session与Query</a>
     </h1>
   
 
-        
-        <a href="/2019/11/07/SQLAlchemy%E4%B8%AD%E7%9A%84Session%E4%B8%8EQuery/" class="archive-article-date">
-  	<time datetime="2019-11-07T07:17:31.999Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="Session"><a href="#Session" class="headerlink" title="Session"></a>Session</h2><p>Session相当于mysql中的cursor，建立与数据库的对话，Session为Query对象提供了入口。</p>
-<h3 id="创建一个Session"><a href="#创建一个Session" class="headerlink" title="创建一个Session"></a>创建一个Session</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">from sqlalchemy import create_engine</span><br><span class="line">from sqlalchemy.orm import sessionmaker</span><br><span class="line"></span><br><span class="line"># 创建一个engine，session通过engine连接数据库资源</span><br><span class="line">some_engine &#x3D; create_engine(&#39;postgresql:&#x2F;&#x2F;scott:tiger@localhost&#x2F;&#39;)</span><br><span class="line"></span><br><span class="line"># 配置一个session类(session 工厂)</span><br><span class="line">Session &#x3D; sessionmaker(bind&#x3D;some_engine)</span><br><span class="line"></span><br><span class="line"># 实例化一个session</span><br><span class="line">session &#x3D; Session()</span><br><span class="line"></span><br><span class="line"># 实例化一个row object</span><br><span class="line">myobject &#x3D; MyObject(&#39;foo&#39;, &#39;bar&#39;)</span><br><span class="line"></span><br><span class="line"># 将object添加到session</span><br><span class="line">session.add(myobject)</span><br><span class="line"></span><br><span class="line"># commit</span><br><span class="line">session.commit()</span><br></pre></td></tr></table></figure>
-
-<h3 id="Contextual-Thread-local-Sessions"><a href="#Contextual-Thread-local-Sessions" class="headerlink" title="Contextual/Thread-local Sessions"></a>Contextual/Thread-local Sessions</h3><p>什么时候创建一个session，什么时候commit，什么时候close</p>
-<ul>
-<li><p>一般来讲，一个session可能进行数据库访问的逻辑操作开始时被构造，在与数据库进行交互时，便开始了一个数据库事务。如果autocommit参数为False(默认)，则该事务将一直持续，直到session回滚，提交或者关闭。该session可以再次使用，产生一个新的事务。所以session尽管一次只能存在一个事务，横跨多个事务。我们将这两个概念称为<strong>事务作用域</strong> 和<strong>会话作用域</strong>。</p>
-</li>
-<li><p>通常来说，要将session的生命周期与访问和操作数据库数据的函数和对象分割开来，这样才能实现一个可预计性以及一致性的事务作用域。</p>
-</li>
-<li><p>确保对于事务什么时候开始以及结束有一个清晰的概念，保证一个事务足够短，意味着事务要在一系列操作后结束，而不是无限期地保持开启状态。</p>
-</li>
-</ul>
-<p>session的生命周期：在一个web应用中，需要同时服务多个用户，不同的请求需要有不同的session。session会在一次请求中被创建出来，在整个处理过程中会被使用，在请求处理完毕之后被关闭销毁。scoped_session是在web应用这种处理请求的场景下，协助进行session维护的</p>
-<p>比如这样初始化一个session的：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db_session &#x3D; scoped_session(sessionmaker(bind&#x3D;engine))</span><br></pre></td></tr></table></figure>
-
-<p>在初始化 web 应用时通过<code>scoped_session</code>函数对原始的<code>Session</code>工厂进行处理，返回出一个<code>db_session</code>工厂，在每个请求来的时候就可以通过这个工厂获得一个 scoped_session 对象。这里是实现了一种registry模式，有一个中心化的registry来保存已经创建的session，在调用db_session工厂时，先检查是否已经在registry中创建过session，如果有则直接返回，如果没有，则创建一个新的session并注册到registry中。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">some_session &#x3D; ScopedSession()</span><br><span class="line">some_other_session &#x3D; ScopedSession()</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; some_session is some_other_session</span><br><span class="line">True</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; some_other_session.remove()</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; new_session &#x3D; ScopedSession()</span><br><span class="line">&gt;&gt;&gt; new_session is some_session</span><br><span class="line">False</span><br></pre></td></tr></table></figure>
-
-<p>调用<code>scoped_session</code>的<code>remove()</code>方法会调用<code>ScopedSession.close()</code>关闭 session，释放连接资源、把数据库 transaction 状态恢复到初始状态等，最后销毁 session 本身，下回再调用<code>ScopedSession</code>的时候，又会重新创建一个 session 出来。</p>
-<p>这样在整个请求的任意环节，都可以随时通过工厂来获取一个 “新的”session 对象，在请求处理完的时候移除这个 session 就行。不必在每个需要读写数据库的地方，小心翼翼地创建个 session 出来并记得关掉。</p>
-<p>由于Python有个概念叫做thread local storage，即线程本地存储，可以作为全局变量使用，但只会在该线程中有效，与其他线程是隔离的，scoped_session 也确实使用了 tls 作为 session 的存储方式，一个线程只能拿到自己创建出来的 session，保证了不同线程不会乱入别人的 session。</p>
-<p>使用 tls 还有另外一个好处，由于 session 是跟着线程走的，就算你没有调用<code>remove()</code>亲手干掉 session，也会由于线程结束，session 也跟着被一起回收掉，不至于泄漏。</p>
-<h3 id="Session的基本用法"><a href="#Session的基本用法" class="headerlink" title="Session的基本用法"></a>Session的基本用法</h3><ul>
-<li><p>查询</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># query一个类</span><br><span class="line">session.query(User).filter_by(name&#x3D;&#39;ed&#39;).all()</span><br><span class="line"></span><br><span class="line"># query多个类，返回一个元组</span><br><span class="line">session.query(User, Address).join(&#39;addresses&#39;).filter_by(name&#x3D;&#39;ed&#39;).all()</span><br><span class="line"></span><br><span class="line"># 使用ORM描述符query</span><br><span class="line">session.query(User.name, User.fullname).all()</span><br><span class="line"></span><br><span class="line"># query一个mapper</span><br><span class="line">user_mapper &#x3D; class_mapper(User)</span><br><span class="line">session.query(user_mapper)</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>添加对象</p>
-<p>使用add()添加一个对象</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">user1 &#x3D; User(name&#x3D;&#39;user1&#39;)</span><br><span class="line">user2 &#x3D; User(name&#x3D;&#39;user2&#39;)</span><br><span class="line">session.add(user1)</span><br><span class="line">session.add(user2)</span><br><span class="line"></span><br><span class="line">session.commit()</span><br></pre></td></tr></table></figure>
-
-<p>使用add_all()添加多个对象</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">session.add_all([item1, item2, item3])</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>删除</p>
-<p>使用delete()将session中对象标记为删除</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">session.delete(obj1)</span><br><span class="line">session.delete(obj2)</span><br><span class="line"></span><br><span class="line">session.commit()</span><br></pre></td></tr></table></figure>
-
-<p>根据过滤条件删除</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">session.query(User).filter(User.id&#x3D;&#x3D;7).delete()</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>flushing</p>
-<p>session使用默认配置(autoflush=True)时，flush操作是无法感知的，在任何query发出之后并且在commit()之前。</p>
-<p>忽略autoflush设置，主动flush</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">session.flush()</span><br></pre></td></tr></table></figure>
-
-<p>创建sessionmaker时关闭autoflush</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Session &#x3D; sessionmaker(autoflush&#x3D;False)</span><br></pre></td></tr></table></figure>
-
-<p>临时关闭autoflush</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysession &#x3D; Session()</span><br><span class="line">mysession.autoflush &#x3D; False</span><br></pre></td></tr></table></figure>
-
-<p>在上下文管理器中关闭autoflush</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">with mysession.no_autoflush:</span><br><span class="line">    mysession.add(some_object)</span><br><span class="line">    mysession.flush()</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>提交</p>
-<p>commit()用来提交当前事务。commit()会预先触发flush()，这个是于autoflush()独立的。如果没有事务，将会报错。session默认行为是始终存在事务，设置autocommit=True可以禁用默认行为，在该模式下，使用begin()启动事务。</p>
-</li>
-<li><p>回滚</p>
-<p>使用rollback()回滚当前事务</p>
-</li>
-<li><p>关闭</p>
-<p>使用close()会调用expunge_all()，释放所有的事务和连接资源。当连接回到连接池，事务的状态也会回滚。</p>
-</li>
-</ul>
-<h3 id="Session的其他方法"><a href="#Session的其他方法" class="headerlink" title="Session的其他方法"></a>Session的其他方法</h3><ul>
-<li><p>excute()</p>
-<p>excute内可以使用与sql语句相近的select(), insert(), update(), delete()甚至是普通的SQL语句：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">result &#x3D; session.execute(</span><br><span class="line">            user_table.select().where(user_table.c.id &#x3D;&#x3D; 5)</span><br><span class="line">        )</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">result &#x3D; session.execute(</span><br><span class="line">            &quot;SELECT * FROM user WHERE id&#x3D;:param&quot;,</span><br><span class="line">            &#123;&quot;param&quot;:5&#125;</span><br><span class="line">        )</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>merge()</p>
-<p>对对象检查主键，如果在数据库中已存在则更新，如果不存在则插入。</p>
-</li>
-</ul>
-<h2 id="Query"><a href="#Query" class="headerlink" title="Query"></a>Query</h2><ul>
-<li><p>用法</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 类</span><br><span class="line">session.query(User)</span><br><span class="line"># 类属性</span><br><span class="line">session.query(User.name)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>all()：返回的是一个对象list</li>
-<li>first()：返回第一个对象</li>
-<li>one()：如果query结果不存在或者有多个对象，则报错，如果只一个则返回</li>
-<li>one_or_none()：与one()稍有不同，如果没有结果，则返回None</li>
-<li>scalar()：调用one()，返回结果的第一列</li>
-</ul>
-</li>
-<li><p>fiter()</p>
-<p>支持比较符</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">session.query(MyClass).filter(MyClass.name &#x3D;&#x3D; &#39;some name&#39;, MyClass.id &gt; 5)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>== 等于</p>
-</li>
-<li><p>!= 不等于</p>
-</li>
-<li><p>like() 模糊查询</p>
-</li>
-<li><p>ilike() 大小写敏感的模糊查询</p>
-</li>
-<li><p>in_ 判断是否在一个list中</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">query.filter(User.name.in_([&#39;ed&#39;, &#39;wendy&#39;, &#39;jack&#39;]))</span><br><span class="line"># not in </span><br><span class="line">query.filter(~User.name.in_([&#39;ed&#39;, &#39;wendy&#39;, &#39;jack&#39;]))</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>and</p>
-</li>
-<li><p>or</p>
-</li>
-<li><p>match</p>
-</li>
-</ul>
-</li>
-<li><p>filter_by(**kwargs)</p>
-<p>只接受关键字参数</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">session.query(MyClass).filter_by(name &#x3D; &#39;some name&#39;, id &#x3D; 5)</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>count()</p>
-<p>返回查询结果的数量</p>
-</li>
-<li><p>having()，group_by()，join()</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">q &#x3D; session.query(User.id).\</span><br><span class="line">            join(User.addresses).\</span><br><span class="line">            group_by(User.id).\</span><br><span class="line">            having(func.count(Address.id) &gt; 2)</span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://docs.sqlalchemy.org/en/13/orm/session_basics.html" target="_blank" rel="noopener">Session Basics</a></p>
-<p><a href="https://docs.sqlalchemy.org/en/13/orm/contextual.html" target="_blank" rel="noopener">Contextual/Thread-local Sessions</a></p>
-<p><a href="https://farer.org/2017/10/28/sqlalchemy_scoped_session/" target="_blank" rel="noopener">SQLAlchemy 的 scoped_session 是啥玩意</a></p>
-<p><a href="https://docs.sqlalchemy.org/en/13/orm/tutorial.html#querying" target="_blank" rel="noopener">Querying</a></p>
-<p><a href="https://docs.sqlalchemy.org/en/13/orm/tutorial.html#querying-with-joins" target="_blank" rel="noopener">Querying with Joins</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
+        <div class="article-info info-on-right">
+          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -333,41 +203,19 @@
 		</ul>
 	</div>
 
-      
+          
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/11/07/SQLAlchemy%E4%B8%AD%E7%9A%84Session%E4%B8%8EQuery/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
+        </div>
+        <div class="clearfix"></div>
+    </header>
   </div>
 </article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
   
   
+    </div></section>
+  
+
+    
 
 
           </div>
@@ -389,10 +237,10 @@
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: true,
+		isHome: false,
 		isPost: false,
 		isArchive: false,
-		isTag: false,
+		isTag: true,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
